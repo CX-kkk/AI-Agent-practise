@@ -1,0 +1,37 @@
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Python generated files and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore VS Code configuration files
+.vscode/
+
+# Ignore virtual environment folders (if you use virtualenv)
+venv/
+env/
+
+# Ignore log files
+*.log
+
+# Ignore Google OAuth credential files
+gmail cleanser test/token.json
+gmail cleanser test/credentials.json
+gmail cleanser test/jolievfx_gmail_backup/*
+
+# Ignore other possible key or config files
+*.pem
+*.key
+*.crt
+*.env
+
+# Ignore build output folders or files
+dist/
+build/
+*.egg-info/
+
+# Ignore database files
+*.sqlite3
