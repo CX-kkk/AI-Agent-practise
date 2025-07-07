@@ -116,8 +116,8 @@ def main():
     # clean_unread_older_than_30_days(service)
     # clean_from_specific_sender(service, 'noreply@example.com')
     # archive_emails(service, 'label:ads')  # you can change the query as needed
-    trash_by_label(service, 'society/Facebook')  # <- this one is enabled
-    # list_all_labels(service)
+    # trash_by_label(service, 'society/Facebook')  # <- this one is enabled
+    list_all_labels(service)
 
 if __name__ == '__main__':
     main()
