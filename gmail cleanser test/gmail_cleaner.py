@@ -88,8 +88,8 @@ def trash_by_label(service, label_name):
 def list_all_labels(service):
     labels_response = service.users().labels().list(userId='me').execute()
     labels = labels_response.get('labels', [])
-    # for label in labels:
-    #     print(f"{label['name']} → {label['id']}")
+    for label in labels:
+        print(f"{label['name']} → {label['id']}")
     return labels
 
 def archive_emails(service, query):
