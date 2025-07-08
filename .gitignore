@@ -20,6 +20,7 @@ env/
 # Ignore Google OAuth credential files
 gmail cleanser test/token.json
 gmail cleanser test/credentials.json
+gmail cleanser test/jolie_token/
 
 # Ignore other possible key or config files
 *.pem
