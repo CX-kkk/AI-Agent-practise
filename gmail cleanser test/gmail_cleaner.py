@@ -33,16 +33,51 @@ def archive_emails(service, query):
         ).execute()
     print("Emails archived.")
 
-def clean_from_specific_sender(service, sender_email):
-    """Delete emails from a specific sender."""
+def clean_from_specific_sender(service, sender_email, max_results=500):
+    """Move emails from a specific sender to Trash (instead of deleting)."""
     query = f"from:{sender_email}"
-    results = service.users().messages().list(userId='me', q=query, maxResults=100).execute()
-    messages = results.get('messages', [])
+    messages = []
+    page_token = None
+    fetched = 0
 
-    print(f"Found {len(messages)} emails from {sender_email}.")
-    for msg in messages:
-        service.users().messages().delete(userId='me', id=msg['id']).execute()
-    print(f"Emails from {sender_email} deleted.")
+    # Fetch messages with pagination if needed
+    while True:
+        list_kwargs = {
+            "userId": 'me',
+            "q": query,
+            "maxResults": min(500, max_results - fetched) if max_results else 500
+        }
+        if page_token:
+            list_kwargs["pageToken"] = page_token
+
+        results = service.users().messages().list(**list_kwargs).execute()
+        batch = results.get('messages', [])
+        messages.extend(batch)
+        fetched += len(batch)
+        page_token = results.get('nextPageToken')
+        if not page_token or (max_results and fetched >= max_results):
+            break
+
+    if max_results:
+        messages = messages[:max_results]
+
+    total = len(messages)
+    print(f"Found {total} emails from {sender_email}.")
+    if total == 0:
+        print("No emails to move to Trash.")
+        return
+
+    # Progress update every 20%
+    progress_marks = {int(total * p / 100) for p in range(20, 101, 20)}
+    if total in progress_marks:
+        progress_marks.remove(total)
+
+    for idx, msg in enumerate(messages, 1):
+        service.users().messages().trash(userId='me', id=msg['id']).execute()
+        if idx in progress_marks:
+            percent = int(idx / total * 100)
+            print(f"{percent}% done...")
+    print(f"Emails from {sender_email} moved to Trash.")
 
 def clean_promotions(service):
     """Delete emails labeled as 'Promotions' (CATEGORY_PROMOTIONS)."""
@@ -157,9 +192,9 @@ def main():
     
     # clean_promotions(service)
     # clean_unread_older_than_30_days(service)
-    # clean_from_specific_sender(service, 'noreply@example.com')
+    clean_from_specific_sender(service, 'sandor@condos.ca')
     # archive_emails(service, 'label:ads')  # you can change the query as needed
-    trash_by_label(service, 'society/Twitter')  # <- this one is enabled
+    # trash_by_label(service, 'society/Twitter')  # <- this one is enabled
     # list_all_labels(service, if_print=True)  # List all labels
 
 if __name__ == '__main__':
