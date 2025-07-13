@@ -150,7 +150,7 @@ Open the following link:
 Make sure you're in your **Gmail Cleaner** project.
 
 #### 2️⃣ Add Yourself as a Test User
-- Scroll down to the **Test Users** section  
+- Scroll down to the **Test Users** section. (Find "OAuth consent screen" -> "Audience" -> "Add Users")
 - Click **“Add Users”**  
 - Enter your email address
 - Click **Save**
